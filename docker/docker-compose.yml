@@ -1,0 +1,8 @@
+version: '3'
+services:
+  challenge-processor:
+    image: challenge-processor:latest
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    network_mode: "host"
