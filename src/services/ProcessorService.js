@@ -10,7 +10,7 @@ const helper = require('../common/helper')
 /**
  * Update challenge task information based on whether a member has registered or unregistered
  * @param {String} challengeId the challenge UUID
- * @param {Number} memberId the member ID
+ * @param {String} memberId the member ID
  */
 async function updateTaskInformation (challengeId, memberId) {
   const m2mToken = await helper.getM2MToken()
@@ -52,7 +52,7 @@ createResource.schema = {
     'mime-type': Joi.string().required(),
     payload: Joi.object().keys({
       challengeId: Joi.string().required(),
-      memberId: Joi.number().required(),
+      memberId: Joi.string().required(),
       roleId: Joi.string().required()
     }).unknown(true).required()
   }).required()
@@ -80,7 +80,7 @@ deleteResource.schema = {
     'mime-type': Joi.string().required(),
     payload: Joi.object().keys({
       challengeId: Joi.string().required(),
-      memberId: Joi.number().required(),
+      memberId: Joi.string().required(),
       roleId: Joi.string().required()
     }).unknown(true).required()
   }).required()
