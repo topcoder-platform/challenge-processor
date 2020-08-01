@@ -1,3 +1,4 @@
+global.Promise = require('bluebird')
 const config = require('config')
 const Kafka = require('no-kafka')
 const healthcheck = require('topcoder-healthcheck-dropin')

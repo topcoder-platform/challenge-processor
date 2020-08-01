@@ -1,7 +1,7 @@
 /**
  * Service for TC Challenge processor.
  */
-
+const _ = require('lodash')
 const Joi = require('joi')
 const config = require('config')
 const logger = require('../common/logger')
