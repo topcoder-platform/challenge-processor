@@ -25,7 +25,7 @@ async function updateTaskInformation (challengeId, memberId) {
       challengeTaskInformation.isAssigned = false
       challengeTaskInformation.memberId = null
     }
-    await helper.patchRequest(`${config.CHALLENGE_API_URL}/${challengeId}`, challengeTaskInformation, m2mToken)
+    await helper.patchRequest(`${config.CHALLENGE_API_URL}/${challengeId}`, { task: challengeTaskInformation }, m2mToken)
     logger.info(`Task updated for id ${challengeId} ${JSON.stringify(challengeTaskInformation)}!`)
   }
 }
