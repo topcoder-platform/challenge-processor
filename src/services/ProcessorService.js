@@ -69,7 +69,7 @@ async function deleteResource (message) {
     logger.info(`Ignoring message as role ${message.payload.roleId} is not Submitter`)
     return
   }
-  await updateTaskInformation(message.payload.challengeId, message.payload.memberId)
+  await updateTaskInformation(message.payload.challengeId, null)
 }
 
 deleteResource.schema = {
