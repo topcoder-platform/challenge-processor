@@ -16,6 +16,10 @@ async function updateTaskInformation (challengeId, memberId) {
   const m2mToken = await helper.getM2MToken()
   const response = await helper.getRequest(`${config.CHALLENGE_API_URL}/${challengeId}`, m2mToken)
   const challenge = _.get(response, 'body', {})
+  if (challenge.legacy.pureV5 || challenge.legacy.pureV5Task) {
+    logger.info('Ignore challenge as it is pureV5 or pureV5Task')
+    return
+  }
   const challengeTaskInformation = _.get(challenge, 'task', { isTask: false, isAssigned: false, memberId: null })
   if (challengeTaskInformation.isTask) {
     if (memberId) {
