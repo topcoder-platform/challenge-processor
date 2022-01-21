@@ -35,17 +35,36 @@ async function updateTaskInformation (challengeId, memberId) {
 }
 
 /**
+ * Update challenge self service copilot
+ * @param {String} challengeId the challenge UUID
+ * @param {String} selfServcieCopilot the member hadnle
+ */
+async function updateSelfServiceCopilot (challengeId, selfServcieCopilot) {
+  const m2mToken = await helper.getM2MToken()
+  const response = await helper.getRequest(`${config.CHALLENGE_API_URL}/${challengeId}`, m2mToken)
+  const challenge = _.get(response, 'body', {})
+  if (!challenge.legacy.selfService) {
+    logger.info('Ignore challenge as it is not self-service')
+    return
+  }
+
+  await helper.patchRequest(`${config.CHALLENGE_API_URL}/${challengeId}`, { legacy: { ...challenge.legacy, selfServcieCopilot } }, m2mToken)
+  logger.info(`Self service updated for id ${challengeId}! Copilot set to ${selfServcieCopilot}`)
+}
+
+/**
  * Handle create resource message.
  * This will check if a member has registered on a task
  * and will update the task information on the challenge object
  * @param {Object} message the create resource message
  */
 async function createResource (message) {
-  if (message.payload.roleId !== config.SUBMITTER_ROLE_ID) {
-    logger.info(`Ignoring message as role ${message.payload.roleId} is not Submitter`)
-    return
+  if (message.payload.roleId === config.SUBMITTER_ROLE_ID) {
+    await updateTaskInformation(message.payload.challengeId, message.payload.memberId)
+  } else if (message.payload.roleId === config.COPILOT_ROLE_ID) {
+    await updateSelfServiceCopilot(message.payload.challengeId, message.payload.memberHandle)
   }
-  await updateTaskInformation(message.payload.challengeId, message.payload.memberId)
+  logger.info(`Ignoring message as role ${message.payload.roleId} is not Submitter`)
 }
 
 createResource.schema = {
@@ -57,6 +76,7 @@ createResource.schema = {
     payload: Joi.object().keys({
       challengeId: Joi.string().required(),
       memberId: Joi.string().required(),
+      memberHandle: Joi.string().required(),
       roleId: Joi.string().required()
     }).unknown(true).required()
   }).required()
@@ -69,11 +89,12 @@ createResource.schema = {
  * @param {Object} message the create resource message
  */
 async function deleteResource (message) {
-  if (message.payload.roleId !== config.SUBMITTER_ROLE_ID) {
-    logger.info(`Ignoring message as role ${message.payload.roleId} is not Submitter`)
-    return
+  if (message.payload.roleId === config.SUBMITTER_ROLE_ID) {
+    await updateTaskInformation(message.payload.challengeId, null)
+  } else if (message.payload.roleId === config.COPILOT_ROLE_ID) {
+    await updateSelfServiceCopilot(message.payload.challengeId, null)
   }
-  await updateTaskInformation(message.payload.challengeId, null)
+  logger.info(`Ignoring message as role ${message.payload.roleId} is not Submitter`)
 }
 
 deleteResource.schema = {
