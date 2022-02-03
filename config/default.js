@@ -26,5 +26,6 @@ module.exports = {
 
   CHALLENGE_API_URL: process.env.CHALLENGE_API_URL || 'http://api.topcoder-dev.com/v5/challenges',
 
-  SUBMITTER_ROLE_ID: process.env.SUBMITTER_ROLE_ID || '732339e7-8e30-49d7-9198-cccf9451e221'
+  SUBMITTER_ROLE_ID: process.env.SUBMITTER_ROLE_ID || '732339e7-8e30-49d7-9198-cccf9451e221',
+  COPILOT_ROLE_ID: process.env.SUBMITTER_ROLE_ID || 'cfe12b3f-2a24-4639-9d8b-ec86726f76bd'
 }
