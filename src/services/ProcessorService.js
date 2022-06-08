@@ -141,7 +141,10 @@ handleChallengeCreation.schema = {
     'mime-type': Joi.string().required(),
     payload: Joi.object().keys({
       id: Joi.string().required(),
-      tags: Joi.array(Joi.string())
+      tags: Joi.array(Joi.string()),
+      legacy: Joi.object().keys({
+        selfService: Joi.boolean()
+      }).required()
     }).unknown(true).required()
   }).required()
 }
