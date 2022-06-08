@@ -49,6 +49,9 @@ const dataHandler = (messageSet, topic, partition) => Promise.each(messageSet, a
       case config.RESOURCE_DELETE_TOPIC:
         await ProcessorService.deleteResource(messageJSON)
         break
+      case config.RESOURCE_CREATED_TOPIC:
+        await ProcessorService.handleChallengeCreation(messageJSON)
+        break
       default:
         throw new Error(`Invalid topic: ${topic}`)
     }
