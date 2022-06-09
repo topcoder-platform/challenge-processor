@@ -53,6 +53,17 @@ async function updateSelfServiceCopilot (challengeId, selfServiceCopilot) {
 }
 
 /**
+ * Update challenge self service data science manager
+ * @param {String} challenge The challenge
+ */
+async function updateSelfServiceDataScienceManager (challenge) {
+  if (challenge.legacy.selfService && challenge.tags.includes('Data Science')) {
+    const m2mToken = await helper.getM2MToken()
+    await helper.postRequest(`${config.RESOURCE_API_URL}/${challenge.id}`, { challengeId: challenge.id, memberHandle: config.DATA_SCIENCE_MANAGER_HANDLE, roleId: config.DATA_SCIENCE_ROLE_ID }, m2mToken)
+  }
+}
+
+/**
  * Handle create resource message.
  * This will check if a member has registered on a task
  * and will update the task information on the challenge object
@@ -113,9 +124,35 @@ deleteResource.schema = {
   }).required()
 }
 
+/**
+ * Handle create challenge message.
+ * and will create the data science manager resource
+ * @param {Object} message the create challenge message
+ */
+ async function handleChallengeCreation (message) {
+  await updateSelfServiceDataScienceManager(message.payload)
+}
+
+handleChallengeCreation.schema = {
+  message: Joi.object().keys({
+    topic: Joi.string().required(),
+    originator: Joi.string().required(),
+    timestamp: Joi.date().required(),
+    'mime-type': Joi.string().required(),
+    payload: Joi.object().keys({
+      id: Joi.string().required(),
+      tags: Joi.array(Joi.string()),
+      legacy: Joi.object().keys({
+        selfService: Joi.boolean()
+      }).required()
+    }).unknown(true).required()
+  }).required()
+}
+
 module.exports = {
   createResource,
-  deleteResource
+  deleteResource,
+  handleChallengeCreation
 }
 
 logger.buildService(module.exports)
