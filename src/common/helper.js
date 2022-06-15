@@ -45,22 +45,6 @@ async function patchRequest (url, body, m2mToken) {
 }
 
 /**
- * Uses superagent to proxy post request
- * @param {String} url the url
- * @param {Object} body the body
- * @param {String} m2mToken the m2m token
- * @returns {Object} the response
- */
- async function postRequest (url, body, m2mToken) {
-  return request
-    .post(url)
-    .send(body)
-    .set('Authorization', `Bearer ${m2mToken}`)
-    .set('Content-Type', 'application/json')
-    .set('Accept', 'application/json')
-}
-
-/**
  * Uses superagent to proxy get request
  * @param {String} url the url
  * @param {String} m2mToken the M2M token
@@ -79,6 +63,5 @@ module.exports = {
   getKafkaOptions,
   getM2MToken,
   patchRequest,
-  getRequest,
-  postRequest
+  getRequest
 }
