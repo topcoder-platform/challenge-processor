@@ -1,35 +1,29 @@
 version: 2
-defaults:
-  &defaults
+defaults: &defaults
   docker:
     - image: circleci/python:2.7-stretch-browsers
-install_dependency:
-  &install_dependency
+install_dependency: &install_dependency
   name: Installation of build and deployment dependencies.
   command: |
     sudo apt install jq
     sudo pip install awscli --upgrade
     sudo pip install docker-compose
-install_deploysuite:
-  &install_deploysuite
+install_deploysuite: &install_deploysuite
   name: Installation of install_deploysuite.
   command: |
     git clone --branch v1.4 https://github.com/topcoder-platform/tc-deploy-scripts ../buildscript
     cp ./../buildscript/master_deploy.sh .
     cp ./../buildscript/buildenv.sh .
     cp ./../buildscript/awsconfiguration.sh .
-restore_cache_settings_for_build:
-  &restore_cache_settings_for_build
+restore_cache_settings_for_build: &restore_cache_settings_for_build
   key: docker-node-modules-{{ checksum "package-lock.json" }}
 
-save_cache_settings:
-  &save_cache_settings
+save_cache_settings: &save_cache_settings
   key: docker-node-modules-{{ checksum "package-lock.json" }}
   paths:
     - node_modules
 
-builddeploy_steps:
-  &builddeploy_steps
+builddeploy_steps: &builddeploy_steps
   - checkout
   - setup_remote_docker
   - run: *install_dependency
@@ -55,7 +49,6 @@ jobs:
       LOGICAL_ENV: "dev"
       APPNAME: "challenge-processor"
     steps: *builddeploy_steps
-    # The resource_class feature allows configuring CPU and RAM resources for each job. Different resource classes are available for different executors. https://circleci.com/docs/2.0/configuration-reference/#resourceclass
     resource_class: large
 
   "build-prod":
@@ -65,6 +58,7 @@ jobs:
       LOGICAL_ENV: "prod"
       APPNAME: "challenge-processor"
     steps: *builddeploy_steps
+    resource_class: large
 
 workflows:
   version: 2
