@@ -25,7 +25,6 @@ module.exports = {
   RESOURCE_DELETE_TOPIC: process.env.RESOURCE_DELETE_TOPIC || 'challenge.action.resource.delete',
   CHALLENGE_CREATED_TOPIC: process.env.CHALLENGE_CREATED_TOPIC || 'challenge.notification.create',
 
-
   CHALLENGE_API_URL: process.env.CHALLENGE_API_URL || 'http://api.topcoder-dev.com/v5/challenges',
   RESOURCE_API_URL: process.env.RESOURCE_API_URL || 'http://api.topcoder-dev.com/v5/resources',
 

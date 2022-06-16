@@ -60,6 +60,7 @@ async function patchRequest (url, body, m2mToken) {
     .set('Accept', 'application/json')
 }
 
+
 /**
  * Uses superagent to proxy get request
  * @param {String} url the url
