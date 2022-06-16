@@ -59,7 +59,9 @@ async function updateSelfServiceCopilot (challengeId, selfServiceCopilot) {
 async function updateSelfServiceDataScienceManager (challenge) {
   if (challenge.legacy.selfService && challenge.tags.includes('Data Science')) {
     const m2mToken = await helper.getM2MToken()
-    await helper.postRequest(`${config.RESOURCE_API_URL}/${challenge.id}`, { challengeId: challenge.id, memberHandle: config.DATA_SCIENCE_MANAGER_HANDLE, roleId: config.DATA_SCIENCE_ROLE_ID }, m2mToken)
+    for (const handle of config.DATA_SCIENCE_MANAGER_HANDLES) {
+      await helper.postRequest(`${config.RESOURCE_API_URL}/${challenge.id}`, { challengeId: challenge.id, memberHandle: handle, roleId: config.DATA_SCIENCE_ROLE_ID }, m2mToken)
+    }
   }
 }
 
@@ -141,7 +143,7 @@ handleChallengeCreation.schema = {
     'mime-type': Joi.string().required(),
     payload: Joi.object().keys({
       id: Joi.string().required(),
-      tags: Joi.array(Joi.string()),
+      tags: Joi.array().items(Joi.string()),
       legacy: Joi.object().keys({
         selfService: Joi.boolean()
       }).required()

@@ -31,6 +31,6 @@ module.exports = {
 
   SUBMITTER_ROLE_ID: process.env.SUBMITTER_ROLE_ID || '732339e7-8e30-49d7-9198-cccf9451e221',
   COPILOT_ROLE_ID: process.env.SUBMITTER_ROLE_ID || 'cfe12b3f-2a24-4639-9d8b-ec86726f76bd',
-  DATA_SCIENCE_MANAGER_HANDLE: process.env.DATA_SCIENCE_MANAGER_HANDLE || 'ketzjs09',
+  DATA_SCIENCE_MANAGER_HANDLES: process.env.DATA_SCIENCE_MANAGER_HANDLES ? process.env.DATA_SCIENCE_MANAGER_HANDLES.split(',') : ['ketzjs09' ,'Dilhani.Gunawardhana', 'Oanh.Tran', 'sdguntcqa', 'sdgun', 'jcori'],
   DATA_SCIENCE_ROLE_ID: process.env.DATA_SCIENCE_ROLE_ID || '0e9c6879-39e4-4eb6-b8df-92407890faf1'
 }
