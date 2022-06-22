@@ -78,7 +78,7 @@ const check = () => {
   return connected
 }
 
-const topics = [config.RESOURCE_CREATE_TOPIC, config.RESOURCE_DELETE_TOPIC]
+const topics = [config.RESOURCE_CREATE_TOPIC, config.RESOURCE_DELETE_TOPIC, config.CHALLENGE_CREATED_TOPIC]
 
 consumer
   .init([{

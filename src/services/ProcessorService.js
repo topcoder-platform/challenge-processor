@@ -57,15 +57,11 @@ async function updateSelfServiceCopilot (challengeId, selfServiceCopilot) {
  * @param {String} challenge The challenge
  */
 async function updateSelfServiceDataScienceManager (challenge) {
-  logger.info('Trying to create data science manager resources...')
   if (challenge.legacy.selfService && challenge.tags.includes('Data Science')) {
     const m2mToken = await helper.getM2MToken()
     for (const handle of config.DATA_SCIENCE_MANAGER_HANDLES) {
-      logger.info(`Adding ${handle} to challenge ${challenge.id}`)
       await helper.postRequest(`${config.RESOURCE_API_URL}`, { challengeId: challenge.id, memberHandle: handle, roleId: config.DATA_SCIENCE_ROLE_ID }, m2mToken)
     }
-  } else {
-    logger.info('Ignore challenge as it is not self-service data science')
   }
 }
 
