@@ -146,7 +146,7 @@ handleChallengeCreation.schema = {
       tags: Joi.array().items(Joi.string()),
       legacy: Joi.object().keys({
         selfService: Joi.boolean()
-      }).required()
+      }).unknown(true).required()
     }).unknown(true).required()
   }).required()
 }
