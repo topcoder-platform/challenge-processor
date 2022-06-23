@@ -60,7 +60,12 @@ async function updateSelfServiceDataScienceManager (challenge) {
   if (challenge.legacy.selfService && challenge.tags.includes('Data Science')) {
     const m2mToken = await helper.getM2MToken()
     for (const handle of config.DATA_SCIENCE_MANAGER_HANDLES) {
-      await helper.postRequest(`${config.RESOURCE_API_URL}`, { challengeId: challenge.id, memberHandle: handle, roleId: config.DATA_SCIENCE_ROLE_ID }, m2mToken)
+      try {
+        await helper.postRequest(`${config.RESOURCE_API_URL}`, { challengeId: challenge.id, memberHandle: handle, roleId: config.DATA_SCIENCE_ROLE_ID }, m2mToken)
+      } catch (e) {
+        logger.debug(`Failed to add ${handle} to challenge ${challenge.id}`)
+        logger.error(e)
+      }
     }
   }
 }
