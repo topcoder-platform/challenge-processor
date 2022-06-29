@@ -21,12 +21,18 @@ module.exports = {
   KAFKA_CLIENT_CERT: process.env.KAFKA_CLIENT_CERT,
   KAFKA_CLIENT_CERT_KEY: process.env.KAFKA_CLIENT_CERT_KEY,
 
+  // superagent request timeout in milliseconds
+  REQUEST_TIMEOUT: process.env.REQUEST_TIMEOUT ? Number(process.env.REQUEST_TIMEOUT) : 20000,
+
   RESOURCE_CREATE_TOPIC: process.env.RESOURCE_CREATE_TOPIC || 'challenge.action.resource.create',
   RESOURCE_DELETE_TOPIC: process.env.RESOURCE_DELETE_TOPIC || 'challenge.action.resource.delete',
   CHALLENGE_CREATED_TOPIC: process.env.CHALLENGE_CREATED_TOPIC || 'challenge.notification.create',
 
   CHALLENGE_API_URL: process.env.CHALLENGE_API_URL || 'http://api.topcoder-dev.com/v5/challenges',
   RESOURCE_API_URL: process.env.RESOURCE_API_URL || 'http://api.topcoder-dev.com/v5/resources',
+  PROJECT_API_BASE: process.env.PROJECT_API_BASE || 'http://api.topcoder-dev.com/v5/projects',
+  MEMBERS_API_BASE: process.env.MEMBERS_API_BASE || 'http://api.topcoder-dev.com/v5/members',
+  SEARCH_MEMBERS_API_BASE: process.env.SEARCH_MEMBERS_API_BASE || 'http://api.topcoder-dev.com/v5/members/_search',
 
   SUBMITTER_ROLE_ID: process.env.SUBMITTER_ROLE_ID || '732339e7-8e30-49d7-9198-cccf9451e221',
   COPILOT_ROLE_ID: process.env.SUBMITTER_ROLE_ID || 'cfe12b3f-2a24-4639-9d8b-ec86726f76bd',

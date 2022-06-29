@@ -51,7 +51,7 @@ async function patchRequest (url, body, m2mToken) {
  * @param {String} m2mToken the m2m token
  * @returns {Object} the response
  */
- async function postRequest (url, body, m2mToken) {
+async function postRequest (url, body, m2mToken) {
   return request
     .post(url)
     .send(body)
@@ -59,7 +59,6 @@ async function patchRequest (url, body, m2mToken) {
     .set('Content-Type', 'application/json')
     .set('Accept', 'application/json')
 }
-
 
 /**
  * Uses superagent to proxy get request
@@ -75,11 +74,70 @@ async function getRequest (url, m2mToken) {
     .set('Accept', 'application/json')
 }
 
+/**
+ * Get project details
+ * @param {Number} projectId the project id
+ * @returns {Object} project detail
+ */
+async function getProject (projectId) {
+  const token = await getM2MToken()
+  const url = `${config.PROJECTS_API_BASE}/${projectId}`
+  const res = getRequest(url, token)
+  if (res.status !== 200) {
+    throw new Error(`Failed to get project details of id ${projectId}: ${_.get(res.body, 'message')}`)
+  }
+  return res.body
+}
+
+/**
+ * Get member details
+ * @param {Number} handle the member handle
+ * @returns {Object} member detail
+ */
+async function getMember (handle) {
+  const token = await getM2MToken()
+  const url = `${config.MEMBERS_API_BASE}/${handle}`
+  const res = getRequest(url, token)
+  if (res.status !== 200) {
+    throw new Error(`Failed to get member details of handle ${handle}: ${_.get(res.body, 'message')}`)
+  }
+  return res.body
+}
+
+/**
+ * Search members of  given ids
+ * @param {Array} memberIds  the members ids
+ * @returns {Array} searched members
+ */
+async function searchMembers (memberIds) {
+  if (!memberIds || memberIds.length === 0) {
+    return []
+  }
+  const token = await getM2MToken()
+  const res = await request
+    .get(config.SEARCH_MEMBERS_API_BASE)
+    .set('Authorization', `Bearer ${token}`)
+    .query({
+      fields: 'handle',
+      query: _.map(memberIds, id => `userId:${id}`).join(' OR '),
+      limit: memberIds.length
+    })
+    .timeout(config.REQUEST_TIMEOUT)
+  const succes = _.get(res.body, 'result.success')
+  const status = _.get(res.body, 'result.status')
+  if (!succes || !status || status < 200 || status >= 300) {
+    throw new Error(`Failed to search members: ${_.get(res.body, 'result.content')}`)
+  }
+  return _.get(res.body, 'result.content') || []
+}
 
 module.exports = {
   getKafkaOptions,
   getM2MToken,
   patchRequest,
   getRequest,
-  postRequest
+  postRequest,
+  getProject,
+  getMember,
+  searchMembers
 }
