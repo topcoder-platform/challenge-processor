@@ -59,8 +59,27 @@ async function updateSelfServiceCopilot (challengeId, selfServiceCopilot) {
 async function updateSelfServiceDataScienceManager (challenge) {
   if (challenge.legacy.selfService && challenge.tags.includes('Data Science')) {
     const m2mToken = await helper.getM2MToken()
+    // get project details
+    const project = await helper.getProject(challenge.projectId)
+    // get member ids
+    const memberIds = _.map(project.members, m => m.userId)
+
+    // search member
+    const members = await helper.searchMembers(memberIds)
+    const existingMmbberHandles = _.map(members, 'handle')
+
     for (const handle of config.DATA_SCIENCE_MANAGER_HANDLES) {
       try {
+        if (!_.includes(existingMmbberHandles, handle)) {
+          // add member to the project as copilot
+          const memberDetails = await helper.getMember(handle)
+          await helper.postRequest(`${config.PROJECT_API_BASE}/${challenge.projectId}/members`, {
+            userId: memberDetails.userId,
+            isPrimary: false,
+            role: 'copilot'
+          }, m2mToken)
+        }
+        // create resource
         await helper.postRequest(`${config.RESOURCE_API_URL}`, { challengeId: challenge.id, memberHandle: handle, roleId: config.DATA_SCIENCE_ROLE_ID }, m2mToken)
       } catch (e) {
         logger.debug(`Failed to add ${handle} to challenge ${challenge.id}`)
