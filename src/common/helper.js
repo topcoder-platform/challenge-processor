@@ -81,7 +81,7 @@ async function getRequest (url, m2mToken) {
  */
 async function getProject (projectId) {
   const token = await getM2MToken()
-  const url = `${config.PROJECTS_API_BASE}/${projectId}`
+  const url = `${config.PROJECT_API_BASE}/${projectId}`
   const res = getRequest(url, token)
   if (res.status !== 200) {
     throw new Error(`Failed to get project details of id ${projectId}: ${_.get(res.body, 'message')}`)
