@@ -32,7 +32,7 @@ module.exports = {
   RESOURCE_API_URL: process.env.RESOURCE_API_URL || 'http://api.topcoder-dev.com/v5/resources',
   PROJECT_API_BASE: process.env.PROJECT_API_BASE || 'http://api.topcoder-dev.com/v5/projects',
   MEMBERS_API_BASE: process.env.MEMBERS_API_BASE || 'http://api.topcoder-dev.com/v5/members',
-  SEARCH_MEMBERS_API_BASE: process.env.SEARCH_MEMBERS_API_BASE || 'http://api.topcoder-dev.com/v5/members/_search',
+  SEARCH_MEMBERS_API_BASE: process.env.SEARCH_MEMBERS_API_BASE || 'http://api.topcoder-dev.com/v3/members/_search',
 
   SUBMITTER_ROLE_ID: process.env.SUBMITTER_ROLE_ID || '732339e7-8e30-49d7-9198-cccf9451e221',
   COPILOT_ROLE_ID: process.env.SUBMITTER_ROLE_ID || 'cfe12b3f-2a24-4639-9d8b-ec86726f76bd',
