@@ -82,8 +82,8 @@ async function getRequest (url, m2mToken) {
 async function getProject (projectId) {
   const token = await getM2MToken()
   const url = `${config.PROJECT_API_BASE}/${projectId}`
-  const res = getRequest(url, token)
-  if ((res.status || res.statusCode) !== 200) {
+  const res = await getRequest(url, token)
+  if (res.status !== 200) {
     throw new Error(`Failed to get project details of id ${projectId}: ${_.get(res.body, 'message')}`)
   }
   return res.body
@@ -97,8 +97,8 @@ async function getProject (projectId) {
 async function getMember (handle) {
   const token = await getM2MToken()
   const url = `${config.MEMBERS_API_BASE}/${handle}`
-  const res = getRequest(url, token)
-  if ((res.status || res.statusCode) !== 200) {
+  const res = await getRequest(url, token)
+  if (res.status !== 200) {
     throw new Error(`Failed to get member details of handle ${handle}: ${_.get(res.body, 'message')}`)
   }
   return res.body
