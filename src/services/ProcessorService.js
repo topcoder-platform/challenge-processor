@@ -66,16 +66,15 @@ async function updateSelfServiceDataScienceManager (challenge) {
 
     // search member
     const members = await helper.searchMembers(memberIds)
-    const existingMmbberHandles = _.map(members, 'handle')
+    const existingMemberHandles = _.map(members, 'handle')
 
     for (const handle of config.DATA_SCIENCE_MANAGER_HANDLES) {
       try {
-        if (!_.includes(existingMmbberHandles, handle)) {
+        if (!_.includes(existingMemberHandles, handle)) {
           // add member to the project as copilot
           const memberDetails = await helper.getMember(handle)
           await helper.postRequest(`${config.PROJECT_API_BASE}/${challenge.projectId}/members`, {
             userId: memberDetails.userId,
-            isPrimary: false,
             role: 'copilot'
           }, m2mToken)
         }
