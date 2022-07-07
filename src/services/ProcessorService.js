@@ -53,6 +53,42 @@ async function updateSelfServiceCopilot (challengeId, selfServiceCopilot) {
 }
 
 /**
+ * Update challenge self service data science manager
+ * @param {String} challenge The challenge
+ */
+async function updateSelfServiceDataScienceManager (challenge) {
+  if (challenge.legacy.selfService && challenge.tags.includes('Data Science')) {
+    const m2mToken = await helper.getM2MToken()
+    // get project details
+    const project = await helper.getProject(challenge.projectId)
+    // get member ids
+    const memberIds = _.map(project.members, m => m.userId)
+
+    // search member
+    const members = await helper.searchMembers(memberIds)
+    const existingMemberHandles = _.map(members, 'handle')
+
+    for (const handle of config.DATA_SCIENCE_MANAGER_HANDLES) {
+      try {
+        if (!_.includes(existingMemberHandles, handle)) {
+          // add member to the project as copilot
+          const memberDetails = await helper.getMember(handle)
+          await helper.postRequest(`${config.PROJECT_API_BASE}/${challenge.projectId}/members`, {
+            userId: memberDetails.userId,
+            role: 'copilot'
+          }, m2mToken)
+        }
+        // create resource
+        await helper.postRequest(`${config.RESOURCE_API_URL}`, { challengeId: challenge.id, memberHandle: handle, roleId: config.DATA_SCIENCE_ROLE_ID }, m2mToken)
+      } catch (e) {
+        logger.debug(`Failed to add ${handle} to challenge ${challenge.id}`)
+        logger.error(e)
+      }
+    }
+  }
+}
+
+/**
  * Handle create resource message.
  * This will check if a member has registered on a task
  * and will update the task information on the challenge object
@@ -113,9 +149,35 @@ deleteResource.schema = {
   }).required()
 }
 
+/**
+ * Handle create challenge message.
+ * and will create the data science manager resource
+ * @param {Object} message the create challenge message
+ */
+async function handleChallengeCreation (message) {
+  await updateSelfServiceDataScienceManager(message.payload)
+}
+
+handleChallengeCreation.schema = {
+  message: Joi.object().keys({
+    topic: Joi.string().required(),
+    originator: Joi.string().required(),
+    timestamp: Joi.date().required(),
+    'mime-type': Joi.string().required(),
+    payload: Joi.object().unknown().keys({
+      id: Joi.string().required(),
+      tags: Joi.array().items(Joi.string()),
+      legacy: Joi.object().unknown().keys({
+        selfService: Joi.boolean()
+      }).required()
+    }).required()
+  }).required()
+}
+
 module.exports = {
   createResource,
-  deleteResource
+  deleteResource,
+  handleChallengeCreation
 }
 
 logger.buildService(module.exports)

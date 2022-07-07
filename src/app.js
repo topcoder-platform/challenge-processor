@@ -49,6 +49,9 @@ const dataHandler = (messageSet, topic, partition) => Promise.each(messageSet, a
       case config.RESOURCE_DELETE_TOPIC:
         await ProcessorService.deleteResource(messageJSON)
         break
+      case config.CHALLENGE_CREATED_TOPIC:
+        await ProcessorService.handleChallengeCreation(messageJSON)
+        break
       default:
         throw new Error(`Invalid topic: ${topic}`)
     }
@@ -75,7 +78,7 @@ const check = () => {
   return connected
 }
 
-const topics = [config.RESOURCE_CREATE_TOPIC, config.RESOURCE_DELETE_TOPIC]
+const topics = [config.RESOURCE_CREATE_TOPIC, config.RESOURCE_DELETE_TOPIC, config.CHALLENGE_CREATED_TOPIC]
 
 consumer
   .init([{
