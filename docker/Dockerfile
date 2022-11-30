@@ -1,5 +1,5 @@
 # Use the base image with Node.js
-FROM node:10.16
+FROM node:10.24
 
 # Copy the current directory into the Docker image
 COPY . /challenge-processor
