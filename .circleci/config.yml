@@ -42,7 +42,7 @@ builddeploy_steps: &builddeploy_steps
         source awsenvconf
         ./psvar-processor.sh -t appenv -p /config/challenge-processor/deployvar
         source deployvar_env
-        ./master_deploy.sh -d ECS -e $DEPLOY_ENV -t latest -j /config/challenge-processor/appvar -i ${APPNAME}
+        ./master_deploy.sh -d ECS -e $DEPLOY_ENV -t latest -s ${LOGICAL_ENV}-global-appvar,${LOGICAL_ENV}-${APPNAME}-appvar -j /config/challenge-processor/appvar -i ${APPNAME}
 
 jobs:
   # Build & Deploy against development backend
