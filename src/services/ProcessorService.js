@@ -31,24 +31,6 @@ async function updateTaskInformation (challengeId, memberId) {
 }
 
 /**
- * Update challenge self service copilot
- * @param {String} challengeId the challenge UUID
- * @param {String} selfServiceCopilot the member hadnle
- */
-async function updateSelfServiceCopilot (challengeId, selfServiceCopilot) {
-  const m2mToken = await helper.getM2MToken()
-  const response = await helper.getRequest(`${config.CHALLENGE_API_URL}/${challengeId}`, m2mToken)
-  const challenge = _.get(response, 'body', {})
-  if (!challenge.legacy.selfService) {
-    logger.info('Ignore challenge as it is not self-service')
-    return
-  }
-
-  await helper.patchRequest(`${config.CHALLENGE_API_URL}/${challengeId}`, { legacy: { ...challenge.legacy, selfServiceCopilot } }, m2mToken)
-  logger.info(`Self service updated for id ${challengeId}! Copilot set to ${selfServiceCopilot}`)
-}
-
-/**
  * Update challenge self service data science manager
  * @param {String} challenge The challenge
  */
@@ -93,8 +75,6 @@ async function updateSelfServiceDataScienceManager (challenge) {
 async function createResource (message) {
   if (message.payload.roleId === config.SUBMITTER_ROLE_ID) {
     await updateTaskInformation(message.payload.challengeId, message.payload.memberId)
-  } else if (message.payload.roleId === config.COPILOT_ROLE_ID) {
-    await updateSelfServiceCopilot(message.payload.challengeId, message.payload.memberHandle)
   } else {
     logger.info(`Ignoring message as role ${message.payload.roleId} is not Submitter`)
   }
@@ -124,8 +104,6 @@ createResource.schema = {
 async function deleteResource (message) {
   if (message.payload.roleId === config.SUBMITTER_ROLE_ID) {
     await updateTaskInformation(message.payload.challengeId, null)
-  } else if (message.payload.roleId === config.COPILOT_ROLE_ID) {
-    await updateSelfServiceCopilot(message.payload.challengeId, null)
   } else {
     logger.info(`Ignoring message as role ${message.payload.roleId} is not Submitter`)
   }
